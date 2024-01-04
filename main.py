@@ -24,7 +24,6 @@ def _check_music_library():
 
 def _check_file_extension(filename):
     _, file_extension = os.path.splitext(filename)
-    print(file_extension)
     return '.mp3' not in file_extension and '.flac' not in file_extension
 
 
