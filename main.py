@@ -7,8 +7,8 @@ ALBUM = r'\d{4} - .+'
 DISC = r'CD(\d+)'
 TITLE = r'\d{2} - .+\..+'
 
-SINGLE_DISC_ALBUM = fr'^{ARTIST}\/{ALBUM}\/{TITLE}$'
-MULTI_DISC_ALBUM = fr'^{ARTIST}\/{ALBUM}\/{DISC}\/{TITLE}$'
+SINGLE_DISC_ALBUM = fr'^{ARTIST}\{os.sep}{ALBUM}\{os.sep}{TITLE}$'
+MULTI_DISC_ALBUM = fr'^{ARTIST}\{os.sep}{ALBUM}\{os.sep}{DISC}\{os.sep}{TITLE}$'
 
 
 def main():
