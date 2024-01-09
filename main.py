@@ -5,10 +5,7 @@ import re
 ARTIST = r'.+'
 ALBUM = r'\d{4} - .+'
 DISC = r'CD(\d+)'
-TITLE = r'\d{2} - .+\..+'
-
-SINGLE_DISC_ALBUM = fr'^{ARTIST}\{os.sep}{ALBUM}\{os.sep}{TITLE}$'
-MULTI_DISC_ALBUM = fr'^{ARTIST}\{os.sep}{ALBUM}\{os.sep}{DISC}\{os.sep}{TITLE}$'
+TRACK = r'\d{2} - .+\..+'
 
 
 def main():
@@ -17,31 +14,50 @@ def main():
 
 
 def _check_directories():
-    incorrect_directory_naming_counter = 0
+    incorrect_naming_counter = 0
 
     for root, _, files in os.walk('.'):
-        incorrect_directory_naming_counter = check_directory(root, files, incorrect_directory_naming_counter)
+        incorrect_naming_counter += _check_directory(root, files)
 
-    logging.info(f'incorrect instances: {incorrect_directory_naming_counter}')
+    logging.info(f'incorrect directories: {incorrect_naming_counter}')
 
 
-def check_directory(root, files, incorrect_directory_naming_counter):
+def _check_directory(root, files):
+    incorrect_naming_counter = 0
+
     for file in files:
         file_path = os.path.join(root, file)
 
         if '.DS_Store' in file or not _is_audio_file(file):
             continue
 
-        if not re.match(SINGLE_DISC_ALBUM, file_path):
-            incorrect_directory_naming_counter += 1
+        attributes = file_path.split(os.sep)[1:]
+
+        if not _is_matching_single_disc_album(attributes) and not _is_matching_multi_disc_album(attributes):
+            incorrect_naming_counter += 1
             logging.warning(f'directory incorrect: {file_path}')
 
-    return incorrect_directory_naming_counter
+    return incorrect_naming_counter
 
 
 def _is_audio_file(filename):
     _, file_extension = os.path.splitext(filename)
     return '.mp3' in file_extension or '.flac' in file_extension
+
+
+def _is_matching_single_disc_album(attributes):
+    return (len(attributes) == 3
+            and re.match(ARTIST, attributes[0])
+            and re.match(ALBUM, attributes[1])
+            and re.match(TRACK, attributes[2]))
+
+
+def _is_matching_multi_disc_album(attributes):
+    return (len(attributes) == 4
+            and re.match(ARTIST, attributes[0])
+            and re.match(ALBUM, attributes[1])
+            and re.match(DISC, attributes[2])
+            and re.match(TRACK, attributes[3]))
 
 
 if __name__ == '__main__':
