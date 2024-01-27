@@ -1,7 +1,7 @@
 import logging
 import argparse
 import directoryChecker
-
+import metadataChecker
 
 def main():
     logging.basicConfig(level=logging.INFO)
@@ -18,6 +18,7 @@ def main():
     if args.all or args.structure:
         logging.info("Checking the folder structure")
         directoryChecker.check(args.music_folder)
+    metadataChecker.check(args.music_folder)
 
 if __name__ == '__main__':
     main()
