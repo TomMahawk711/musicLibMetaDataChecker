@@ -36,6 +36,22 @@ options:
   --metadata    Check if the metadata of the files matches the data stored in the path
 ```
 
+### Requirements
+
+The requirements can be found in the `requirements.txt` file and are also listed here:
+
+```
+eyed3==0.9.7
+```
+
+If you want to install the requirements via the `requirements.txt` file you can use the command:
+
+```bash
+python3 -m pip install -r ./requirements.txt
+# or
+pip3 install -r ./requirements.txt
+```
+
 ### Docker
 
 If you for some reason want to use docker to run the script you can do so
@@ -55,23 +71,7 @@ docker run -v $(pwd):/app -v <music_folder>:/music -w /app -it python sh -c "pip
 Repalce `<music_folder>` with absolute path the music folder that you want to scan. Replace `<arguments>` with the arguments that should be execute.
 Do not change anything else.
 
-Info: Your current working directory needs the be the top level folder of the project.
-
-### Requirements
-
-The requirements can be found in the `requirements.txt` file and are also listed here:
-
-```
-eyed3==0.9.7
-```
-
-If you want to install the requirements via the `requirements.txt` file you can use the command:
-
-```bash
-python3 -m pip install -r ./requirements.txt
-# or
-pip3 install -r ./requirements.txt
-```
+Info: Your current working directory needs the be the top level folder of the project. You also don't need to install the requirements if you use the docker commands (Will be preformed automatically).
 
 ## Contribute
 
