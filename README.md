@@ -36,6 +36,16 @@ options:
   --metadata    Check if the metadata of the files matches the data stored in the path
 ```
 
+### Virtual Environment
+
+It is highly encouraged to execute this project in a virtual environment.
+To create a virtual enviroment run the commands:
+
+```bash
+python -m venv ./.venv
+./.venv/Scripts/active
+```
+
 ### Requirements
 
 The requirements can be found in the `requirements.txt` file and are also listed here:
