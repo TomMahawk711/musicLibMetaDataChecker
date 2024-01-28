@@ -1,64 +1,28 @@
 import logging
-import os
-import re
-
-ARTIST = r'.+'
-ALBUM = r'\d{4} - .+'
-DISC = r'CD(\d+)'
-TRACK = r'\d{2} - .+\..+'
-
+import argparse
+import directoryChecker
+import metadataChecker
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    _check_directories()
+    parser = argparse.ArgumentParser(
+                    prog='python3 main.py',
+                    description='This program verifies multiple rules that we want to have enforced on the music library')
+    parser.add_argument('music_folder', help='Absolute path to the music folder')
+    parser.add_argument('-a', '--all', help="Run all the checks", action='store_true')
+    parser.add_argument('--structure', help="Check if the folder structure complies", action='store_true')
+    parser.add_argument('--metadata', help="Check if the metadata of the files matches the data stored in the path", action='store_true')
 
+    args = parser.parse_args()
 
-def _check_directories():
-    incorrect_naming_counter = 0
+    # handle the arguments
+    if args.all or args.structure:
+        logging.info("Checking the folder structure")
+        directoryChecker.check(args.music_folder)
 
-    for root, _, files in os.walk('.'):
-        incorrect_naming_counter += _check_directory(root, files)
-
-    logging.info(f'incorrect directories: {incorrect_naming_counter}')
-
-
-def _check_directory(root, files):
-    incorrect_naming_counter = 0
-
-    for file in files:
-        file_path = os.path.join(root, file)
-
-        if '.DS_Store' in file or not _is_audio_file(file):
-            continue
-
-        attributes = file_path.split(os.sep)[1:]
-
-        if not _is_matching_single_disc_album(attributes) and not _is_matching_multi_disc_album(attributes):
-            incorrect_naming_counter += 1
-            logging.warning(f'directory incorrect: {file_path}')
-
-    return incorrect_naming_counter
-
-
-def _is_audio_file(filename):
-    _, file_extension = os.path.splitext(filename)
-    return '.mp3' in file_extension or '.flac' in file_extension
-
-
-def _is_matching_single_disc_album(attributes):
-    return (len(attributes) == 3
-            and re.match(ARTIST, attributes[0])
-            and re.match(ALBUM, attributes[1])
-            and re.match(TRACK, attributes[2]))
-
-
-def _is_matching_multi_disc_album(attributes):
-    return (len(attributes) == 4
-            and re.match(ARTIST, attributes[0])
-            and re.match(ALBUM, attributes[1])
-            and re.match(DISC, attributes[2])
-            and re.match(TRACK, attributes[3]))
-
+    if args.all or args.metadata:
+        logging.info("Checking the metadata")
+        metadataChecker.check(args.music_folder)
 
 if __name__ == '__main__':
     main()
